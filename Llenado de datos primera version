@@ -1,100 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Llena información</title>
-<link rel="stylesheet" href="globals.css">
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Flow</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #1e1e1e;
+}
+
+/* PANTALLAS */
+.screen {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.active {
+  display: flex;
+}
+
+/* CAJAS */
+.box {
+  background: #d9d9d9;
+  padding: 20px;
+  border-radius: 6px;
+  width: 300px;
+}
+
+/* BOTONES LOGIN */
+.login-btn {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #333;
+  border-radius: 5px;
+  cursor: pointer;
+  background: white;
+}
+
+/* FORMULARIO (TU ESTILO ORIGINAL) */
+.container {
+  width: 350px;
+  margin: 40px auto;
+  background: #d9d9d9;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #555;
+}
+
+.edad-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edad-box {
+  width: 60px;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background: white;
+}
+
+.stepper {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepper button {
+  width: 35px;
+  height: 20px;
+  border: 1px solid #555;
+  background: white;
+  cursor: pointer;
+}
+
+.stepper button:active {
+  background: #ccc;
+}
+
+.genero {
+  margin-top: 20px;
+}
+
+.genero label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+</style>
 </head>
+
 <body>
-<main class="llenas-informacion">
-<form action="#" method="post" novalidate>
-<div class="nombre-ii">
-<label class="text-wrapper-2" for="nombre">Nombre:</label>
-<div class="inner-frame">
-<input
-          class="text-wrapper-2"
-          type="text"
-          id="nombre"
-          name="nombre"
-          placeholder="Escribe tu nombre"
-          autocomplete="name"
-          aria-label="Nombre"
-        />
+
+<!-- PANTALLA INICIAL -->
+<div class="screen active" id="inicio">
+  <div class="box">
+    <div class="login-btn" onclick="abrirLogin('facebook')">
+      Iniciar sesión con Facebook
+    </div>
+
+    <div class="login-btn" onclick="abrirLogin('google')">
+      Iniciar sesión con Google
+    </div>
+  </div>
 </div>
+
+<!-- LOGIN -->
+<div class="screen" id="login">
+  <div class="box">
+    <h3 id="tituloLogin"></h3>
+
+    <input type="email" placeholder="Escribe tu correo">
+    <input type="password" placeholder="Escribe tu contraseña">
+
+    <button onclick="irFormulario()">Iniciar sesión</button>
+    <button onclick="volver()">Regresar</button>
+  </div>
 </div>
-<label class="text-wrapper" for="edad">Edad:</label>
-<div class="group" role="group" aria-label="Selector de edad">
-<div class="edad-cuadro" aria-hidden="true"></div>
-<input
-        class="div"
-        type="number"
-        id="edad"
-        name="edad"
-        value="0"
-        min="0"
-        inputmode="numeric"
-        aria-label="Edad"
-      />
-<div class="edad-general" aria-hidden="true"></div>
-<button class="edad-stepper edad-stepper-up" type="button" aria-label="Aumentar edad">
-<img class="img" src="img/image.svg" alt="" />
-</button>
-<button class="edad-stepper edad-stepper-down" type="button" aria-label="Disminuir edad">
-<img class="vector" src="img/vector.svg" alt="" />
-</button>
-<img class="line" src="img/line-1.svg" alt="" />
+
+<!-- FORMULARIO (TU CÓDIGO) -->
+<div class="screen" id="formulario">
+  <div class="container">
+    <h2>Llenas información</h2>
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" placeholder="Escribe tu nombre">
+
+    <label>Edad:</label>
+    <div class="edad-container">
+      <input type="number" id="edad" class="edad-box" value="0" min="0">
+      
+      <div class="stepper">
+        <button onclick="cambiarEdad(1)">▲</button>
+        <button onclick="cambiarEdad(-1)">▼</button>
+      </div>
+    </div>
+
+    <div class="genero">
+      <label>Genero:</label>
+
+      <label>
+        <input type="radio" name="genero" value="masculino">
+        Masculino
+      </label>
+
+      <label>
+        <input type="radio" name="genero" value="femenino">
+        Femenino
+      </label>
+    </div>
+  </div>
 </div>
-</form>
-</main>
+
 <script>
-(function () {
-    const edadInput = document.getElementById('edad');
-    const increaseButton = document.querySelector('.edad-stepper-up');
-    const decreaseButton = document.querySelector('.edad-stepper-down');
+function cambiarPantalla(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-    if (!edadInput || !increaseButton || !decreaseButton) return;
+function abrirLogin(tipo) {
+  const titulo = document.getElementById("tituloLogin");
+  titulo.textContent = tipo === "facebook" ? "Login con Facebook" : "Login con Google";
+  cambiarPantalla("login");
+}
 
-    const getMin = () => {
-      const min = parseInt(edadInput.min, 10);
-      return Number.isNaN(min) ? 0 : min;
-    };
+function volver() {
+  cambiarPantalla("inicio");
+}
 
-    const normalizeValue = () => {
-      const value = parseInt(edadInput.value, 10);
-      if (Number.isNaN(value) || value < getMin()) {
-        edadInput.value = String(getMin());
-      } else {
-        edadInput.value = String(value);
-      }
-    };
+function irFormulario() {
+  cambiarPantalla("formulario");
+}
 
-    increaseButton.addEventListener('click', function () {
-      normalizeValue();
-      edadInput.stepUp();
-      edadInput.dispatchEvent(new Event('input', { bubbles: true }));
-      edadInput.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+/* TU FUNCIÓN ORIGINAL */
+function cambiarEdad(valor) {
+  const input = document.getElementById("edad");
+  let edad = parseInt(input.value) || 0;
 
-    decreaseButton.addEventListener('click', function () {
-      normalizeValue();
-      const currentValue = parseInt(edadInput.value, 10);
-      const nextValue = Math.max(getMin(), currentValue - 1);
-      edadInput.value = String(nextValue);
-      edadInput.dispatchEvent(new Event('input', { bubbles: true }));
-      edadInput.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+  edad += valor;
+  if (edad < 0) edad = 0;
 
-    edadInput.addEventListener('input', function () {
-      if (edadInput.value === '') return;
-      normalizeValue();
-    });
-
-    edadInput.addEventListener('blur', function () {
-      normalizeValue();
-    });
-  }());
+  input.value = edad;
+}
 </script>
+
 </body>
 </html>
