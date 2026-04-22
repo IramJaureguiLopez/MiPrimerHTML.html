@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Llena información</title>
+<link rel="stylesheet" href="globals.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="llenas-informacion">
+<form action="#" method="post" novalidate>
+<div class="nombre-ii">
+<label class="text-wrapper-2" for="nombre">Nombre:</label>
+<div class="inner-frame">
+<input
+          class="text-wrapper-2"
+          type="text"
+          id="nombre"
+          name="nombre"
+          placeholder="Escribe tu nombre"
+          autocomplete="name"
+          aria-label="Nombre"
+        />
+</div>
+</div>
+<label class="text-wrapper" for="edad">Edad:</label>
+<div class="group" role="group" aria-label="Selector de edad">
+<div class="edad-cuadro" aria-hidden="true"></div>
+<input
+        class="div"
+        type="number"
+        id="edad"
+        name="edad"
+        value="0"
+        min="0"
+        inputmode="numeric"
+        aria-label="Edad"
+      />
+<div class="edad-general" aria-hidden="true"></div>
+<button class="edad-stepper edad-stepper-up" type="button" aria-label="Aumentar edad">
+<img class="img" src="img/image.svg" alt="" />
+</button>
+<button class="edad-stepper edad-stepper-down" type="button" aria-label="Disminuir edad">
+<img class="vector" src="img/vector.svg" alt="" />
+</button>
+<img class="line" src="img/line-1.svg" alt="" />
+</div>
+</form>
+</main>
+<script>
+(function () {
+    const edadInput = document.getElementById('edad');
+    const increaseButton = document.querySelector('.edad-stepper-up');
+    const decreaseButton = document.querySelector('.edad-stepper-down');
+
+    if (!edadInput || !increaseButton || !decreaseButton) return;
+
+    const getMin = () => {
+      const min = parseInt(edadInput.min, 10);
+      return Number.isNaN(min) ? 0 : min;
+    };
+
+    const normalizeValue = () => {
+      const value = parseInt(edadInput.value, 10);
+      if (Number.isNaN(value) || value < getMin()) {
+        edadInput.value = String(getMin());
+      } else {
+        edadInput.value = String(value);
+      }
+    };
+
+    increaseButton.addEventListener('click', function () {
+      normalizeValue();
+      edadInput.stepUp();
+      edadInput.dispatchEvent(new Event('input', { bubbles: true }));
+      edadInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    decreaseButton.addEventListener('click', function () {
+      normalizeValue();
+      const currentValue = parseInt(edadInput.value, 10);
+      const nextValue = Math.max(getMin(), currentValue - 1);
+      edadInput.value = String(nextValue);
+      edadInput.dispatchEvent(new Event('input', { bubbles: true }));
+      edadInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    edadInput.addEventListener('input', function () {
+      if (edadInput.value === '') return;
+      normalizeValue();
+    });
+
+    edadInput.addEventListener('blur', function () {
+      normalizeValue();
+    });
+  }());
+</script>
+</body>
+</html>
